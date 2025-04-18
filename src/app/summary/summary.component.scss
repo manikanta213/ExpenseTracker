@@ -1,0 +1,543 @@
+
+
+/* Color Variables */
+$primary-gradient: linear-gradient(135deg, #6b47f8 0%, #a13ff0 100%);
+$primary-color: #6b47f8;
+$secondary-color: #a13ff0;
+$text-dark: #333;
+$text-muted: #666;
+$text-light: #f8f9fa;
+$white: #ffffff;
+$border-color: #eee;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$progress-bar-gradient: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+
+/* Base Styles */
+.expense-tracker {
+  font-family: 'Roboto', sans-serif;
+  max-width: 100%;
+  padding: 0;
+  position: relative;
+  min-height: 100vh;
+  background: $text-light;
+  color: $text-dark;
+}
+
+/* Header Styles with Integrated Month Tabs */
+.tracker-header {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: $primary-gradient;
+  color: $white;
+  position: relative;
+  height: 20vh;
+  min-height: 120px;
+  box-shadow: 0 2px 10px $shadow-color;
+  z-index: 10;
+  overflow: hidden;
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    flex: 1;
+  }
+
+  h1 {
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .month-tabs {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px 12px;
+    gap: 24px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    align-items: flex-end;
+    height: 40px;
+    flex-shrink: 0;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      color: rgba($white, 0.7);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      outline: none;
+      white-space: nowrap;
+      padding: 4px 0;
+      position: relative;
+      font-weight: 400;
+
+      &.active {
+        color: $white;
+        font-weight: 500;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -8px;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: $white;
+          border-radius: 3px;
+          animation: underline 0.3s ease-out;
+        }
+      }
+
+      &:hover:not(.active) {
+        color: rgba($white, 0.9);
+      }
+    }
+  }
+}
+
+
+
+@keyframes underline {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  color: $white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+
+  &:active {
+    background: rgba($white, 0.2);
+    transform: scale(0.95);
+  }
+
+  i {
+    font-size: 24px;
+  }
+}
+
+/* Month Selector Styles */
+.month-selector {
+  background: $white;
+  padding: 16px;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 10px $shadow-color;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease-out;
+
+  .year-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    span {
+      font-weight: 500;
+      font-size: 1.2rem;
+      color: $text-dark;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      color: $primary-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+
+      &:active {
+        background: rgba($primary-color, 0.1);
+      }
+
+      i {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+
+    button {
+      padding: 8px;
+      border: 1px solid $border-color;
+      background: $white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      outline: none;
+
+      &.active {
+        background: $primary-color;
+        color: $white;
+        border-color: $primary-color;
+        font-weight: 500;
+      }
+
+      &:hover:not(.active) {
+        background: rgba($primary-color, 0.05);
+      }
+    }
+  }
+}
+
+/* Budget Card Styles */
+.budget-card {
+  background: $white;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px;
+  box-shadow: 0 4px 20px $shadow-color;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 10px $shadow-color;
+  }
+}
+
+.budget-header {
+  h2 {
+    font-size: 1.1rem;
+    color: $text-muted;
+    margin: 0 0 0 0;
+    font-weight: 500;
+  }
+}
+
+.budget-amount {
+  margin: 5px 0px 13px 0px;
+  font-size: 1.8rem;
+  line-height: 1.2;
+
+  .remaining {
+    font-weight: 700;
+    color: $text-dark;
+    margin-right: 5px;
+  }
+
+  .total {
+    color: $text-muted;
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
+}
+
+.progress-container {
+  height: 17px;
+  background: darken($text-light, 5%);
+  border-radius: 12px;
+  margin: 10px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: $progress-bar-gradient;
+  border-radius: 12px;
+  transition: width 0.6s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+      rgba($white, 0.1) 0%, 
+      rgba($white, 0.3) 50%, 
+      rgba($white, 0.1) 100%);
+    animation: shimmer 2s infinite;
+  }
+}
+
+.progress-text {
+  color: $white;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.spending-status {
+  display: flex;
+  align-items: center;
+  color: #4caf50;
+  font-size: 0.9rem;
+  margin-top: 10px;
+
+  i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Expenses Section Styles */
+.expenses-section {
+  margin: 24px 16px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: $text-dark;
+    font-weight: 500;
+  }
+}
+
+.filter-dropdown {
+  position: relative;
+
+  select {
+    padding: 8px 12px;
+    padding-right: 30px;
+    border-radius: 20px;
+    border: 1px solid $border-color;
+    background: $white;
+    font-size: 0.9rem;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+  }
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.expense-item {
+  display: flex;
+  align-items: center;
+  background: $white;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px $shadow-color;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 4px $shadow-color;
+  }
+}
+
+.expense-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  color: $white;
+  flex-shrink: 0;
+
+  &.category-health {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  &.category-food {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  }
+
+  &.category-shopping {
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  }
+
+  i {
+    font-size: 20px;
+  }
+}
+
+.expense-details {
+  flex: 1;
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .expense-date {
+    margin: 0;
+    font-size: 0.8rem;
+    color: $text-muted;
+  }
+}
+
+.expense-amount {
+  font-weight: 600;
+  color: $text-dark; /* Changed from red to dark text */
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Add Expense FAB */
+.add-expense-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: $primary-gradient;
+  color: $white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba($primary-color, 0.3);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+  outline: none;
+
+  i {
+    font-size: 24px;
+  }
+
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba($primary-color, 0.4);
+  }
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .tracker-header {
+    height: 20vh;
+    min-height: 140px;
+
+    .header-top {
+      padding: 12px 16px;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+    }
+
+    .month-tabs {
+      padding: 0 12px 8px;
+      gap: 30px;
+    }
+  }
+
+  .budget-card {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .month-selector {
+    padding: 12px;
+    
+    .month-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .expenses-section {
+    margin: 20px 12px;
+    padding-bottom: 10px !important;
+  }
+
+  .add-expense-fab {
+    bottom: 16px;
+    right: 16px;
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 350px) {
+  .budget-amount {
+    font-size: 1.5rem;
+
+    .total {
+      font-size: 1rem;
+    }
+  }
+
+  .expense-item {
+    padding: 10px 12px;
+  }
+
+  .expense-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+
+    i {
+      font-size: 18px;
+    }
+  }
+}

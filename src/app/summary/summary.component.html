@@ -1,0 +1,100 @@
+<!-- budget-tracker.component.html -->
+<div class="expense-tracker" [class.header-scrolled]="isScrolled">
+    <!-- Header with integrated month tabs -->
+    <header class="tracker-header">
+        <div class="header-top">
+          <button class="icon-button">
+            <i class="material-icons">arrow_back</i>
+          </button>
+          <h1>Expenses</h1>
+          <button class="icon-button" (click)="openCalendar()">
+            <i class="material-icons">calendar_today</i>
+          </button>
+        </div>
+    
+        <!-- Month Tabs - Continuous Scroll -->
+        <div class="month-tabs-container">
+          <div class="month-tabs" #monthTabs>
+            <button *ngFor="let month of allMonths" 
+                    [class.active]="isSelectedMonth(month)"
+                    (click)="selectMonth(month)">
+              {{ month | slice:0:3 }}
+            </button>
+          </div>
+        </div>
+      </header>
+  
+    <!-- Month Selector Popup -->
+    <div class="month-selector" *ngIf="showCalendar">
+      <div class="year-selector">
+        <button (click)="prevYear()"><i class="material-icons">chevron_left</i></button>
+        <span>{{ currentYear }}</span>
+        <button (click)="nextYear()"><i class="material-icons">chevron_right</i></button>
+      </div>
+      <div class="month-grid">
+        <button *ngFor="let month of months" 
+                [class.active]="isCurrentMonth(month)"
+                (click)="selectMonth(month)">
+          {{ month }}
+        </button>
+      </div>
+    </div>
+  
+    <!-- Budget Card -->
+    <div class="budget-card" @fadeIn>
+      <div class="budget-header">
+        <h2>Total Remaining Budget</h2>
+      </div>
+      
+      <div class="budget-amount">
+        <span class="remaining">{{remainingBudget | currency}}</span>
+        <span class="total">/{{totalBudget | currency}}</span>
+      </div>
+  
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="(spentAmount / totalBudget) * 100">
+          <span class="progress-text">Spent: {{spentAmount | currency}}</span>
+        </div>
+      </div>
+  
+      <div class="spending-status">
+        <i class="material-icons">check_circle</i>
+        <span>Your spending is on track</span>
+      </div>
+    </div>
+  
+    <!-- Expenses Section -->
+    <div class="expenses-section" @slideUp>
+      <div class="section-header">
+        <h2>Expenses</h2>
+        <div class="filter-dropdown">
+          <select>
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option selected>Monthly</option>
+          </select>
+        </div>
+      </div>
+  
+      <div class="expenses-list">
+        <!-- Example Expense Item -->
+        <div class="expense-item" *ngFor="let expense of expenses" @stagger>
+          <div class="expense-icon" [ngClass]="'category-' + expense.category">
+            <i class="material-icons">{{expense.icon}}</i>
+          </div>
+          <div class="expense-details">
+            <h3>{{expense.title}}</h3>
+            <p class="expense-date">{{expense.date | date:'mediumDate'}}</p>
+          </div>
+          <div class="expense-amount">
+            -{{expense.amount | currency}}
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Expense FAB -->
+    <button class="add-expense-fab" @pulse>
+      <i class="material-icons">add</i>
+    </button>
+  </div>

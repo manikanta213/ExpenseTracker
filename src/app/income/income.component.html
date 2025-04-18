@@ -1,0 +1,103 @@
+<div class="income-app">
+    <div class="calendar-header">
+      <button mat-icon-button (click)="updateMonthYear(-1)" class="nav-button">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <h1 class="month-title">{{ currentMonth }} {{ currentYear }}</h1>
+      <button mat-icon-button (click)="updateMonthYear(1)" class="nav-button">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  
+    <div class="summary-card" #summaryCard>
+      <div class="summary-content">
+        <mat-icon class="summary-icon">account_balance</mat-icon>
+        <div>
+          <h3>Total Received Income</h3>
+          <p>{{ totalIncome | number:'1.2-2' }}</p>
+        </div>
+      </div>
+      <button mat-flat-button color="primary" (click)="openAddIncomeDialog()" class="add-button">
+        <mat-icon>add</mat-icon> Add Income
+      </button>
+    </div>
+  
+    <div class="income-list-container">
+      <h2 class="list-title">Income Sources</h2>
+      
+      <div *ngIf="incomeEntries.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">attach_money</mat-icon>
+        <p>No income sources recorded yet</p>
+      </div>
+      
+      <div class="income-list" #incomeList>
+        <mat-card *ngFor="let entry of incomeEntries; let i = index" 
+                  class="income-card" [attr.data-index]="i">
+          <mat-card-content>
+            <div class="card-content">
+              <div class="entry-icon">
+                <mat-icon>payments</mat-icon>
+              </div>
+              
+              <div class="entry-details">
+                <div class="entry-header">
+                  <span class="description">{{ entry.description }}</span>
+                  <span class="amount">{{ entry.amount | number:'1.2-2' }}</span>
+                </div>
+                <span class="date">{{ entry.date | date:'MMM d, y' }}</span>
+              </div>
+              
+              <div class="entry-actions">
+                <mat-slide-toggle [(ngModel)]="entry.received" 
+                                 (change)="toggleReceived(i)"
+                                 color="primary"
+                                 class="toggle-button">
+                </mat-slide-toggle>
+                <button mat-icon-button (click)="editIncome(i)" class="edit-button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add Income Dialog -->
+  <ng-template #addIncomeDialog>
+    <div class="dialog-container" #dialogContainer>
+      <h2 mat-dialog-title>Add New Income</h2>
+      <mat-dialog-content>
+        <form [formGroup]="incomeForm" class="income-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description">
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <span matPrefix> &nbsp;</span>
+            <input matInput type="number" formControlName="amount">
+          </mat-form-field>
+          
+          <mat-checkbox formControlName="received">Mark as received</mat-checkbox>
+        </form>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button color="primary" 
+                (click)="addIncome()" 
+                [disabled]="!incomeForm.valid">
+          Add Income
+        </button>
+      </mat-dialog-actions>
+    </div>
+  </ng-template>

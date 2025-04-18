@@ -1,0 +1,139 @@
+<div class="expenses-app">
+    <div class="calendar-header">
+      <button mat-icon-button (click)="updateMonthYear(-1)" class="nav-button">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <h1 class="month-title">{{ currentMonth }} {{ currentYear }}</h1>
+      <button mat-icon-button (click)="updateMonthYear(1)" class="nav-button">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  
+    <div class="summary-cards">
+      <div class="summary-card total-card" #totalCard>
+        <div class="summary-content">
+          <mat-icon class="summary-icon">receipt</mat-icon>
+          <div>
+            <h3>Total Expenses</h3>
+            <p>{{ totalExpenses | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="summary-card remaining-card" #remainingCard>
+        <div class="summary-content">
+          <mat-icon class="summary-icon">account_balance_wallet</mat-icon>
+          <div>
+            <h3>Remaining</h3>
+            <p>{{ remainingAmount | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="expense-form-container" #formContainer>
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>
+            {{ editingIndex !== null ? 'Edit Expense' : 'Add New Expense' }}
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <form [formGroup]="expenseForm" class="expense-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="category">
+                  <mat-option *ngFor="let category of categories" [value]="category">
+                    {{ category }}
+                  </mat-option>
+                  <mat-option (click)="addCategory(newCategory.value)">
+                    <input #newCategory placeholder="Add new..." (click)="$event.stopPropagation()">
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="description">
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Amount</mat-label>
+                <span matPrefix> &nbsp;</span>
+                <input matInput type="number" formControlName="amount">
+              </mat-form-field>
+            </div>
+            
+            <div class="form-actions">
+              <button *ngIf="editingIndex !== null" mat-stroked-button color="warn" 
+                      (click)="cancelEdit()" class="action-button">
+                Cancel
+              </button>
+              <button mat-raised-button color="primary" (click)="addExpense()" 
+                      class="action-button submit-button">
+                {{ editingIndex !== null ? 'Update' : 'Add' }}
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  
+    <div class="expenses-list-container">
+      <h2 class="list-title">Your Expenses</h2>
+      
+      <div *ngIf="expenseEntries.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">money_off</mat-icon>
+        <p>No expenses recorded yet</p>
+      </div>
+      
+      <div class="expense-list" #expenseList>
+        <mat-card *ngFor="let entry of expenseEntries; let i = index" 
+                  class="expense-card" [attr.data-index]="i">
+          <mat-card-content>
+            <div class="card-content">
+              <div class="entry-icon">
+                <mat-icon [ngSwitch]="entry.category">
+                  <ng-container *ngSwitchCase="'Food'">restaurant</ng-container>
+                  <ng-container *ngSwitchCase="'Transport'">directions_car</ng-container>
+                  <ng-container *ngSwitchCase="'Utilities'">house</ng-container>
+                  <ng-container *ngSwitchCase="'Entertainment'">sports_esports</ng-container>
+                  <ng-container *ngSwitchCase="'Rent'">home_work</ng-container>
+                  <ng-container *ngSwitchDefault>receipt</ng-container>
+                </mat-icon>
+              </div>
+              
+              <div class="entry-details">
+                <div class="entry-header">
+                  <span class="category">{{ entry.category }}</span>
+                  <span class="amount">{{ entry.amount | number:'1.2-2' }}</span>
+                </div>
+                <p class="description">{{ entry.description }}</p>
+                <span class="date">{{ entry.date | date:'MMM d' }}</span>
+              </div>
+              
+              <div class="entry-actions">
+                <button mat-icon-button (click)="editExpense(i)" class="edit-button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="removeExpense(i)" class="delete-button">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
