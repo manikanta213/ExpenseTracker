@@ -39,6 +39,7 @@
               "src/styles.scss"
             ],
             "scripts": [],
+             "baseHref": "/ExpenseTracker/",
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
