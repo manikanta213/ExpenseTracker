@@ -121,4 +121,5 @@ export class SummaryComponent {
   nextYear() {
     this.currentYear++;
   }
+  
 }
